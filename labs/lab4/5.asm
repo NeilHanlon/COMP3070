@@ -11,8 +11,9 @@ INCLUDE Irvine32.inc
 main PROC
 	call Clrscr
 
-	mov ecx, 7
+	mov ecx, 7 ; we're getting the first seven of the sequence
 
+	; seed ebx/edx (n-1 and n-2) with the values of Fib_1 and Fib_2
 	mov ebx, 1
 	mov edx, 1
 

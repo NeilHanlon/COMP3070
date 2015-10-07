@@ -15,7 +15,7 @@ main PROC
 
 	mov esi, offset bigEndian
 	mov ecx, lengthof bigEndian / 2
-	mov edi, offset bigEndian + (lengthof bigEndian - 1 )
+	mov edi, offset bigEndian + (lengthof bigEndian - 1 ) ; move secondary pointer to end of bigEndian array
 
 	mov eax, [esi]
 	push eax ; push bigEndian in case we need it again

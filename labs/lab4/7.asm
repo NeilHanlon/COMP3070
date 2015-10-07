@@ -1,6 +1,6 @@
 TITLE Lab 4 Problem 7, Neil Hanlon, Oct. 6 2015						(7.asm)
 
-; Description:
+; Description: Reverse a string byte by byte
 ; 
 ; Revision date:
 
@@ -23,6 +23,7 @@ main PROC
 	mov ecx, lengthof source
 
 	oranges:
+		; same as reversing an array, except loop backwards across target from the beginning of the source
 		mov al, byte ptr [esi]
 		mov [edi], al
 		inc esi

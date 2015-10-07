@@ -17,6 +17,8 @@ main PROC
 	mov eax, 0
 	mov esi, offset array_w
 	mov ecx, lengthof array_w
+
+	; print initial array
 	print1:
 		mov ax, [esi]
 		call writehex
@@ -32,6 +34,7 @@ main PROC
 	mov edi, offset array_dw
 
 	oranges:
+		; copy array to dword array
 		mov ax, word ptr [esi]
 		mov [edi], ax
 		mov ebx, [edi]
@@ -41,6 +44,8 @@ main PROC
 
 	mov esi, offset array_dw
 	mov ecx, lengthof array_dw
+
+	;print dword array
 	print2:
 		mov eax, [esi]
 		call writehex

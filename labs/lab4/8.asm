@@ -1,6 +1,6 @@
 TITLE Lab 4 Problem 8, Neil Hanlon, Oct. 6, 2015
 
-; Description:
+; Description: Shift elements of an array +1, [10, 20, 30, 40] -> [40, 10, 20, 30]
 ; 
 ; Revision date:
 
@@ -20,6 +20,8 @@ main PROC
 	mov edi, offset array + (lengthof array -1 * type array)
 
 	oranges:
+		; we accomplish the swap by keeping edi always at the last element of the array, and only incrementing esi
+		; there are, algorithmically, better ways to perform this operation, but meh.
 		mov eax, [esi]
 		mov ebx, [edi]
 		mov [esi], ebx

@@ -22,7 +22,7 @@ main PROC
 
 	oranges:
 		mov eax, [esi] ; 0
-		add esi, type array1
+		add esi, type array1 ; advance to next value
 		mov ebx, [esi] ; 2
 		sub ebx, eax ; 2 - 0 = 2
 		add sum, ebx ; sum = 2
@@ -30,6 +30,7 @@ main PROC
 
 	call crlf
 
+	;write output
 	mov edx, offset text
 	call writestring
 	mov eax, sum

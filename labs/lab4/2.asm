@@ -24,14 +24,14 @@ main PROC
 	call crlf
 
 	oranges:
-		mov al, [esi]
-		inc esi
-		mov ah, [esi]
-		xchg ah, al
-		mov [esi], ah
-		dec esi
+		; loop through and exchange pairs of bytes
+		mov al, [esi] ; get nth byte
+		inc esi ; move forward one byte
+		mov ah, [esi] ; get n+1th byte
+		xchg ah, al ; swap n for n+1
+		mov [esi], ah ; perform the swap in memory
 		mov [esi], al
-		add esi, 2
+		inc esi ; move to next pair of bytes
 	loop oranges
 
 	mov eax, dword ptr [array1]

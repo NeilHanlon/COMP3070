@@ -21,19 +21,20 @@ main PROC
 	call WriteString
 	call PrintArray
 
-	mov esi, offset array1
-	mov edi, offset array1_end - 1
-	mov ecx, lengthof array1 / 2
+	mov esi, offset array1 ; beginning of the array
+	mov edi, offset array1_end - 1 ; end of the array
+	mov ecx, lengthof array1 / 2 ; loop half as many times as there are elemens
 	mov edx, type array1
 
 	oranges:
+		; first, get the nth and n+xth elements
 		mov al, [esi]
 		mov bl, [edi]
+		; swap them in memory, the nth value is now the n+xth value, and vice versa
 		mov [edi], al
 		mov [esi], bl
-		mov al, [esi]
-		inc esi
-		dec edi
+		inc esi ; move the head forward
+		dec edi ; and move the tail backwards, until we meet in the middle at lengthof array1 / 2
 	loop oranges
 
 	mov edx, offset message2
