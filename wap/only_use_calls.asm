@@ -67,13 +67,14 @@ multiplication PROC
 multiplication ENDP
 
 division PROC
-	mov eax, ebx
-	mov edx, ecx
-	mov ecx, 100
+	mov eax, ebx ; int1 -> eax
+	mov edx, ecx ; int2 -> edx
+	mov ecx, ebx ; int1 -> ecx for counter. int1 / int2 <= int1
 
 	seven:
-		sub edx, eax
-		dec count
+		inc ecx
+		sub eax, edx ; int1 - int2 -> int1 
+		inc count ; count = quotient
 	loop seven
 
 	xchg eax, edx
