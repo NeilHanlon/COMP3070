@@ -7,7 +7,8 @@ TITLE Lab 5 Factorial problem, Neil Hanlon, Oct. 7th, 2015 (factorial.asm)
 INCLUDE Irvine32.inc
 .data
 prompt1 BYTE "Enter the number to get the factorial of: ",0
-answer BYTE "The factorial of your number is: ",0
+caption byte "Factorial Answer",0
+answer BYTE "The factorial of your number is: ",
 
 .code
 main PROC
@@ -27,6 +28,18 @@ main PROC
 
 	exit
 main ENDP
+
+StringAppend PROC
+	;takes eax and appends it to esi. esi should be at the end of itself. We're modifying memory. because reasons.
+	inc esi
+	mov byte ptr [esi], 20h ;space
+	inc esi
+	mov byte ptr [esi], al
+	inc esi
+	mov byte ptr [esi], 0
+
+	ret
+StringAppend ENDP
 
 GetNumber PROC
 	mov edx, offset prompt1
