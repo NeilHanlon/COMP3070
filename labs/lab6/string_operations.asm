@@ -69,6 +69,14 @@ ReadInpStr PROC
 	call CountVowels
 	call ReverseString
 	call CountWords
+	call CapFirst
+
+	mov edx, offset out_original
+	call writestring
+	mov edx, offset user_string
+	call writestring
+
+	call crlf
 
 	ret
 ReadInpStr ENDP
@@ -156,6 +164,13 @@ CountWords PROC uses esi ecx
 	jmp theend
 
 	foundspace:
+		; we're going to cheat here and also capitalize the first letter of each word while we're at it
+		inc esi ; move to the letter after the space
+		mov al, [esi]
+		sub al, 20h ; move it 20h back (effectively making it uppercase)
+		mov [esi], al
+		dec esi ; go back
+
 		inc genericcounter
 		jmp goback
 
@@ -167,6 +182,16 @@ CountWords PROC uses esi ecx
 		call crlf
 	ret
 CountWords ENDP
+
+CapFirst PROC
+	; capitalizes the first byte of what's in esi by subtracting 20h
+
+	mov al, [esi]
+	sub al, 20h
+	mov [esi], al
+
+	ret
+CapFirst ENDP
 
 StringToMem PROC uses esi ecx
 	;edx contains memory location of the string at pos0, read through byte by byte and store in esi
