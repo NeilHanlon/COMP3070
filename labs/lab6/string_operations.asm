@@ -1,0 +1,193 @@
+TITLE MASM Template						(main.asm)
+
+; Description: ReadInpStr procedure to read in a string
+; countvowels procedure to count number of vowels
+; reversestring procedure to reverse
+; count number of words (count hex 20)
+; capitalize the first letter of each word.
+; 
+; Revision date:
+
+lowa = 61h
+lowe = 65h
+lowi = 69h
+lowo = 6fh
+lowu = 75h
+capA = 41h
+capE = 45h
+capI = 49h
+capO = 4eh
+capU = 55h
+space = 20h
+
+
+INCLUDE Irvine32.inc
+.data
+
+;defines for program
+vowels byte lowa, capa, lowe, cape, lowi, capi, lowo, capo, lowu, capu
+
+;user stuff
+user_string byte 1000 dup(0)
+strlen word 0
+
+; prompts
+prompt_readinpstr byte "Enter a string, followed by the return key: ",0
+
+; outputs
+out_vowelnum byte "The number of vowels is: ",0
+out_reverse byte "The string in reverse is: ",0
+out_wordnum byte "The total number of words is: ",0
+out_original byte "The original input was: ",0
+
+; random bullshit
+genericcounter byte 0
+
+.code
+main PROC
+	call Clrscr
+
+	call clearreg
+
+	call ReadInpStr
+
+	exit
+main ENDP
+
+ReadInpStr PROC
+
+	mov edx, offset prompt_readinpstr
+	call writestring
+	mov ecx, 1000 ; this will be the max length of the string
+	call ReadString
+	mov strlen, ax; move actual input length to memory
+	mov esi, offset user_string
+	call StringToMem
+
+	;do the things
+	movzx ecx, strlen
+	call CountVowels
+	call ReverseString
+	call CountWords
+
+	ret
+ReadInpStr ENDP
+
+CountVowels PROC uses esi ecx
+	; counts the number of vowels by comparing it to each value in the vowels array
+	; loops through esi, increments "genericcounter" variable when a vowel is encountered
+
+	mov genericcounter, 0
+
+	oranges:
+
+		mov edi, offset vowels
+		push ecx
+		mov ecx, lengthof vowels
+
+		seven:
+			mov al, byte ptr [esi]
+			mov ah, byte ptr [edi]
+			cmp ah, al
+			je foundvowel
+			inc edi
+		loop seven
+
+		goback:
+			inc esi
+			pop ecx
+
+	loop oranges
+	jmp theend
+
+	foundvowel:
+		inc genericcounter
+		jmp goback
+
+	theend:
+		mov eax, 0
+		mov al, genericcounter
+		mov edx, offset out_vowelnum
+		call writestring
+		call writedec
+		call crlf
+
+	ret
+CountVowels ENDP
+
+ReverseString PROC uses esi ecx
+	; esi = what to write (pls be at end offset arr+lengthof arr-1)
+	; ecx = how many
+	; writes byte by byte
+
+	movzx eax, strlen
+	add esi, eax
+	dec esi
+
+	mov edx, offset out_reverse
+	call WriteString
+
+	oranges:
+		mov al, byte ptr [esi]
+		call writechar
+		dec esi
+	loop oranges
+
+	call crlf
+
+	ret
+ReverseString ENDP
+
+CountWords PROC uses esi ecx
+	; ptr to array in esi, length in ecx
+	; counts number of spaces (20h) in word, stores in generic counter.
+	; number of words is spaces + 1
+
+	mov genericcounter, 1 ; start at 1 becuase even if we don't find a space, it's still one word
+
+	oranges:
+		mov al, byte ptr [esi]
+		cmp al, space
+		je foundspace
+		
+		goback:
+			inc esi
+	loop oranges
+	jmp theend
+
+	foundspace:
+		inc genericcounter
+		jmp goback
+
+	theend:
+		mov edx, offset out_wordnum
+		movzx eax, genericcounter
+		call writestring
+		call writedec
+		call crlf
+	ret
+CountWords ENDP
+
+StringToMem PROC uses esi ecx
+	;edx contains memory location of the string at pos0, read through byte by byte and store in esi
+	mov ecx, 0
+	mov cx, strlen
+	oranges:
+		mov al, byte ptr [edx]
+		mov byte ptr [esi], al
+		inc esi
+		inc edx
+	loop oranges
+
+	ret
+StringToMem ENDP
+
+clearreg proc
+	mov eax, 0
+	mov ebx, 0
+	mov ecx, 0
+	mov edx, 0
+	ret
+clearreg endp
+
+END main

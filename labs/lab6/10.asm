@@ -96,11 +96,11 @@ Display PROC USES esi ecx edx
 	mov edx, offset blockOutputSlice
 	call WriteString
 	
-	L1:
+	oranges:
 		mov eax, [esi] 
 		call WriteDec
 		inc esi 
-	loop L1 
+	loop oranges 
 	
 	call Crlf
 	ret
