@@ -1,4 +1,4 @@
-TITLE MASM Template						(main.asm)
+TITLE Lab 6 Problem #infinity, Neil Hanlon, Raymond Deng, Michael Welch, Zach Zeigler, Oct 24, 2015 (string_operations.asm)
 
 ; Description: ReadInpStr procedure to read in a string
 ; countvowels procedure to count number of vowels
@@ -26,13 +26,14 @@ INCLUDE Irvine32.inc
 
 ;defines for program
 vowels byte lowa, capa, lowe, cape, lowi, capi, lowo, capo, lowu, capu
+lowercase byte 61h, 62h, 63h, 64h, 65h, 66h, 67h, 68h, 69h, 6Ah, 6Bh, 6Ch, 6Dh, 6Eh, 6Fh, 70h, 71h, 72h, 73h, 74h, 75h, 76h, 77h, 78h, 79h, 7Ah
 
 ;user stuff
 user_string byte 1000 dup(0)
 strlen word 0
 
 ; prompts
-prompt_readinpstr byte "Enter a string, followed by the return key: ",0
+prompt_readinpstr byte "Enter a string, followed by the return key: ",0ah,0dh,0
 
 ; outputs
 out_vowelnum byte "The number of vowels is: ",0
@@ -63,6 +64,8 @@ ReadInpStr PROC
 	mov strlen, ax; move actual input length to memory
 	mov esi, offset user_string
 	call StringToMem
+
+	call crlf
 
 	;do the things
 	movzx ecx, strlen
@@ -167,7 +170,7 @@ CountWords PROC uses esi ecx
 		; we're going to cheat here and also capitalize the first letter of each word while we're at it
 		inc esi ; move to the letter after the space
 		mov al, [esi]
-		sub al, 20h ; move it 20h back (effectively making it uppercase)
+		call TransformUpper
 		mov [esi], al
 		dec esi ; go back
 
@@ -187,11 +190,32 @@ CapFirst PROC
 	; capitalizes the first byte of what's in esi by subtracting 20h
 
 	mov al, [esi]
-	sub al, 20h
+	call TransformUpper
 	mov [esi], al
 
 	ret
 CapFirst ENDP
+
+TransformUpper PROC uses esi ecx
+	;takes letter in al. If it's a lowercase letter (in range 61-7A), it will be replaced with the uppercase version of itself (-20h)
+
+	mov esi, offset lowercase
+	mov ecx, lengthof lowercase
+	oranges:
+		cmp al, byte ptr [esi]
+		je foundlower
+		inc esi
+	loop oranges
+	jmp theend
+
+	foundlower:
+		; we've determined that al is a lowercase letter.
+		sub al, 20h ; subtract 20h from the letter
+
+	theend:
+
+	ret
+TransformUpper ENDP
 
 StringToMem PROC uses esi ecx
 	;edx contains memory location of the string at pos0, read through byte by byte and store in esi
